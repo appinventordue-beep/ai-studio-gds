@@ -1,0 +1,5 @@
+{
+  "name": "Gestionale Assenze Docenti",
+  "description": "Un'applicazione per la gestione delle assenze dei docenti e la pianificazione automatica delle sostituzioni, basata sugli orari scolastici caricati in formato CSV.",
+  "requestFramePermissions": []
+}
