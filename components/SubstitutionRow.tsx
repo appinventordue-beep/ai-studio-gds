@@ -1,7 +1,6 @@
-
 import React, { ChangeEvent } from 'react';
 import { Absentee, BreakableCoTeacher } from '../types';
-import { TIME_SLOTS } from '../constants';
+import { TIME_SLOTS, MOTIVATION_OPTIONS } from '../constants';
 
 interface SubstitutionRowProps {
     rowKey: string;
@@ -25,11 +24,15 @@ const SubstitutionRow: React.FC<SubstitutionRowProps> = ({
     coTeachersOptions
 }) => {
     
-    const handleInputChange = (field: 'substitute' | 'reason') => (e: ChangeEvent<HTMLInputElement>) => {
-        onSubChange(rowKey, field, e.target.value);
+    const handleSubstituteChange = (e: ChangeEvent<HTMLInputElement>) => {
+        onSubChange(rowKey, 'substitute', e.target.value);
     };
 
-    if (!subDetails) return null; // Should not happen if state is synced
+    const handleReasonChange = (e: ChangeEvent<HTMLSelectElement>) => {
+        onSubChange(rowKey, 'reason', e.target.value);
+    }
+
+    if (!subDetails) return null;
 
     const dataListId = `dl-${rowKey}`;
 
@@ -48,12 +51,12 @@ const SubstitutionRow: React.FC<SubstitutionRowProps> = ({
                 <input
                     type="text"
                     value={subDetails.substitute}
-                    onChange={handleInputChange('substitute')}
+                    onChange={handleSubstituteChange}
                     list={dataListId}
                     className={`w-full p-2 text-sm border-0 rounded-md bg-transparent focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white ${subDetails.textColor}`}
                 />
                  <datalist id={dataListId}>
-                    {coTeachersOptions.length > 0 && <optgroup label="Spezzando Compresenza">
+                    {coTeachersOptions.length > 0 && <optgroup label="Pull-out da Compresenza">
                         {coTeachersOptions.map(opt => <option key={`${opt.name}-${opt.fromClass}`} value={`${opt.name} (da ${opt.fromClass})`} />)}
                     </optgroup>}
                     {availableTeachers.length > 0 && <optgroup label="A Disposizione">
@@ -62,12 +65,17 @@ const SubstitutionRow: React.FC<SubstitutionRowProps> = ({
                 </datalist>
             </td>
             <td className="p-0">
-                <input
-                    type="text"
+                 <select
                     value={subDetails.reason}
-                    onChange={handleInputChange('reason')}
-                    className={`w-full p-2 text-sm border-0 rounded-md bg-transparent focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white ${subDetails.textColor}`}
-                />
+                    onChange={handleReasonChange}
+                    className={`w-full p-2 text-sm border-0 rounded-md bg-transparent appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white ${subDetails.textColor}`}
+                >
+                    {MOTIVATION_OPTIONS.map(reason => (
+                        <option key={reason} value={reason}>
+                            {reason}
+                        </option>
+                    ))}
+                </select>
             </td>
         </tr>
     );
